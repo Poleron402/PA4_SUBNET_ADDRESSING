@@ -9,7 +9,7 @@ from mininet.cli import CLI
 from mininet.log import setLogLevel, info
 from mininet.link import TCLink, Intf
 from subprocess import call
-
+from mininet.term import makeTerm
 def myNetwork():
 
     net = Mininet( topo=None,
@@ -71,10 +71,10 @@ def myNetwork():
     net.get('s1').start([c0])
 
     info( '*** Post configure switches and hosts\n')
-
+    # makeTerm(h4, title='Node', term='xterm', display=None, cmd='python3 tpa4_chat_server.py; bash')
     CLI(net)
     net.stop()
-
+    # net.stopXterms()
 if __name__ == '__main__':
     setLogLevel( 'info' )
     myNetwork()

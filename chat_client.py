@@ -19,7 +19,7 @@ log = logging.getLogger(__name__)
 log.setLevel(logging.DEBUG)
 
 # Set global variables
-server_name = '10.0.0.1'
+server_name = '10.0.2.2'
 server_port = 12000
 
 # the function below is a thread that listens for messages from the server
