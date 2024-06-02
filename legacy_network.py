@@ -25,18 +25,18 @@ def myNetwork():
     info( '*** Add switches\n')
     s2 = net.addSwitch('s2', cls=OVSKernelSwitch)
     s1 = net.addSwitch('s1', cls=OVSKernelSwitch)
-    r5 = net.addHost('r5', cls=Node, ip='0.0.0.0')
+    r5 = net.addHost('r5', cls=Node, ip='10.0.2.3/24')#ip change here
     r5.cmd('sysctl -w net.ipv4.ip_forward=1')
-    r4 = net.addHost('r4', cls=Node, ip='0.0.0.0')
+    r4 = net.addHost('r4', cls=Node, ip='192.168.3.1/30')#ip change here
     r4.cmd('sysctl -w net.ipv4.ip_forward=1')
-    r3 = net.addHost('r3', cls=Node, ip='0.0.0.0')
+    r3 = net.addHost('r3', cls=Node, ip='10.0.1.3/24')#ip change here
     r3.cmd('sysctl -w net.ipv4.ip_forward=1')
 
     info( '*** Add hosts\n')
-    h1 = net.addHost('h1', cls=Host, ip='10.0.0.1', defaultRoute=None)
-    h2 = net.addHost('h2', cls=Host, ip='10.0.0.2', defaultRoute=None)
-    h3 = net.addHost('h3', cls=Host, ip='10.0.0.3', defaultRoute=None)
-    h4 = net.addHost('h4', cls=Host, ip='10.0.0.4', defaultRoute=None)
+    h1 = net.addHost('h1', cls=Host, ip='10.0.1.1/24', defaultRoute='via 10.0.1.3')#ip change here
+    h2 = net.addHost('h2', cls=Host, ip='10.0.1.2/24', defaultRoute='via 10.0.1.3')#ip change here
+    h3 = net.addHost('h3', cls=Host, ip='10.0.2.1/24', defaultRoute='via 10.0.2.3')#ip change here
+    h4 = net.addHost('h4', cls=Host, ip='10.0.2.2/24', defaultRoute='via 10.0.2.3')#ip change here
 
     info( '*** Add links\n')
     net.addLink(h1, s1)
@@ -45,11 +45,23 @@ def myNetwork():
     net.addLink(h4, s2)
     net.addLink(s2, r5)
     net.addLink(s1, r3)
-    net.addLink(r3, r4)
-    net.addLink(r4, r5)
+    net.addLink(r3, r4, intfName1='r3-eth1',params1={'ip':'192.168.3.2/30'}, intfName2='r4-eth0', params2={'ip':'192.168.3.1/30'})
+    net.addLink(r4, r5, intfName1='r4-eth1', params1={'ip': '192.168.4.1/30'}, intfName2='r5-eth1', params2={'ip': '192.168.4.2/30'})
+
 
     info( '*** Starting network\n')
     net.build()
+    r3.cmd('ip route add 192.168.4.0/30 via 192.168.3.1 dev r3-eth1')
+    r3.cmd('ip route add 10.0.2.0/24 via 192.168.3.1 dev r3-eth1')
+
+    r4.cmd('ip route add 10.0.1.0/24 via 192.168.3.2 dev r4-eth0')
+    r4.cmd('ip route add 10.0.2.0/24 via 192.168.4.2 dev r4-eth1')
+
+    r5.cmd('ip route add 192.168.3.0/30 via 192.168.4.1 dev r5-eth1')
+    r5.cmd('ip route add 10.0.1.0/24 via 192.168.4.1 dev r5-eth1')
+    
+    
+    
     info( '*** Starting controllers\n')
     for controller in net.controllers:
         controller.start()
