@@ -10,6 +10,11 @@ from mininet.log import setLogLevel, info
 from mininet.link import TCLink, Intf
 from subprocess import call
 from mininet.term import makeTerm
+import subprocess
+
+# Run the certificate generation script
+subprocess.run(["sudo", "-E", "python3", "certificate_generation.py"])
+
 def myNetwork():
 
     net = Mininet( topo=None,
@@ -71,10 +76,13 @@ def myNetwork():
     net.get('s1').start([c0])
 
     info( '*** Post configure switches and hosts\n')
-    # makeTerm(h4, title='Node', term='xterm', display=None, cmd='python3 tpa4_chat_server.py; bash')
+    makeTerm(h4, title='Server', term='xterm', display=None, cmd='python3 tpa4_chat_server.py; bash')
+    makeTerm(h1, title='Client1', term='xterm', display=None, cmd='python3 tpa4_chat_client.py; bash')
+    makeTerm(h2, title='Client2', term='xterm', display=None, cmd='python3 tpa4_chat_client.py; bash')
+    makeTerm(h3, title='Client3', term='xterm', display=None, cmd='python3 tpa4_chat_client.py; bash')
     CLI(net)
     net.stop()
-    # net.stopXterms()
+    net.stopXterms()
 if __name__ == '__main__':
     setLogLevel( 'info' )
     myNetwork()
