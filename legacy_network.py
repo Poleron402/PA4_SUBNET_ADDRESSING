@@ -71,10 +71,13 @@ def myNetwork():
     net.get('s1').start([c0])
 
     info( '*** Post configure switches and hosts\n')
-    # makeTerm(h4, title='Node', term='xterm', display=None, cmd='python3 tpa4_chat_server.py; bash')
+    makeTerm(h4, title='Server', term='xterm', display=None, cmd='python3 tpa4_chat_server.py; bash')
+    makeTerm(h1, title='Client1', term='xterm', display=None, cmd='python3 tpa4_chat_client.py; bash')
+    makeTerm(h2, title='Client2', term='xterm', display=None, cmd='python3 tpa4_chat_client.py; bash')
+    makeTerm(h3, title='Client3', term='xterm', display=None, cmd='python3 tpa4_chat_client.py; bash')
     CLI(net)
+    net.stopXterms()
     net.stop()
-    # net.stopXterms()
 if __name__ == '__main__':
     setLogLevel( 'info' )
     myNetwork()
