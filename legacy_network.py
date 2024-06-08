@@ -76,8 +76,8 @@ def myNetwork():
     makeTerm(h2, title='Client2', term='xterm', display=None, cmd='python3 tpa4_chat_client.py; bash')
     makeTerm(h3, title='Client3', term='xterm', display=None, cmd='python3 tpa4_chat_client.py; bash')
     CLI(net)
-    net.stopXterms()
     net.stop()
+    net.stopXterms()
 if __name__ == '__main__':
     setLogLevel( 'info' )
     myNetwork()
