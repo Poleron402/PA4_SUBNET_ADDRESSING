@@ -32,15 +32,13 @@ def main():
     run_command(csr_command)
 
     # Check if CA certificate and key exist, generate if they don't
-    #try:
-    #    with open("ca_cert.pem", "r") as f:
-    #        print("CA certificate exists.")
-    #except FileNotFoundError:
-    #    print("CA certificate not found, generating new one.")
-    #    # Generate CA private key
-    #    run_command(f"openssl genrsa -aes256 -passout pass:{passphrase} -out ca_key.pem 2048")
-        # Generate CA certificate
-    #    run_command(f"openssl req -x509 -new -nodes -key ca_key.pem -sha256 -days 365 -out ca_cert.pem -subj '/C=US/ST=CA/L=Seaside/O=CST311/OU=Networking/CN=ca' -passin pass:{passphrase}")
+    try:
+        with open("ca_cert.pem", "r") as f:
+    except FileNotFoundError:
+    # Generate CA private key
+        run_command(f"openssl genrsa -aes256 -passout pass:{passphrase} -out ca_key.pem 2048")
+    # Generate CA certificate
+        run_command(f"openssl req -x509 -new -nodes -key ca_key.pem -sha256 -days 365 -out ca_cert.pem -subj '/C=US/ST=CA/L=Seaside/O=CST311/OU=Networking/CN=ca' -passin pass:{passphrase}")
 
     # Generate certificate using the CA
     run_command(f"openssl x509 -req -in server_csr.pem -CA ca_cert.pem -CAkey ca_key.pem -CAcreateserial -out chatserver-cert.pem -days 365 -sha256 -passin pass:{passphrase}")
