@@ -34,10 +34,13 @@ def main():
     # Check if CA certificate and key exist, generate if they don't
     try:
         with open("ca_cert.pem", "r") as f:
+            #print("CA certificate exists.")
+            print()
     except FileNotFoundError:
-    # Generate CA private key
+        #print("CA certificate not found, generating new one.")
+        # Generate CA private key
         run_command(f"openssl genrsa -aes256 -passout pass:{passphrase} -out ca_key.pem 2048")
-    # Generate CA certificate
+        # Generate CA certificate
         run_command(f"openssl req -x509 -new -nodes -key ca_key.pem -sha256 -days 365 -out ca_cert.pem -subj '/C=US/ST=CA/L=Seaside/O=CST311/OU=Networking/CN=ca' -passin pass:{passphrase}")
 
     # Generate certificate using the CA
